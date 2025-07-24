@@ -13,6 +13,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.List;
 
+
 @org.springframework.stereotype.Service
 public class Service {
 
@@ -21,11 +22,10 @@ public class Service {
     private final HttpClient httpClient = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(10)).build();
 
-    public List<Hogwarts> pegarTodosPersonagens() throws IOException, InterruptedException {
+    private List<Hogwarts> buscarPersonagens(String url) {
         try {
-
             HttpRequest httpRequest = HttpRequest.newBuilder()
-                    .uri(URI.create("https://hp-api.onrender.com/api/characters"))
+                    .uri(URI.create(url))
                     .GET()
                     .build();
 
@@ -40,48 +40,24 @@ public class Service {
                 throw new RuntimeException("Resposta nao e json. Content Type: " + contentType);
             }
 
-
             return objectMapper.readValue(httpResponse.body(), new TypeReference<List<Hogwarts>>() {
             });
 
-
-        } catch (IOException | InterruptedException e){
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Erro ao consumir api", e);
         }
     }
-
+    public List<Hogwarts> pegarTodosPersonagens() {
+        return buscarPersonagens("https://hp-api.onrender.com/api/characters");
+    }
     public List<Hogwarts> todosEstudantes(){
-        try {
-
-            HttpRequest httpRequest = HttpRequest.newBuilder()
-                    .uri(URI.create("https://hp-api.onrender.com/api/characters/students"))
-                    .GET()
-                    .build();
-
-            HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-
-            if (httpResponse.statusCode() != 200) {
-                throw new RuntimeException("Erro ao buscar endereço http: " + httpResponse.statusCode());
-            }
-
-            String contentType = httpResponse.headers().firstValue("Content-Type").orElse("");
-            if (!contentType.contains("application/json")) {
-                throw new RuntimeException("Resposta nao e json. Content Type: " + contentType);
-            }
-
-
-            return objectMapper.readValue(httpResponse.body(), new TypeReference<List<Hogwarts>>() {
-            });
-
-
-        } catch (IOException | InterruptedException e){
-            throw new RuntimeException("Erro ao consumir api", e);
-        }
-
+        String url = "https://hp-api.onrender.com/api/characters/students";
+        return  buscarPersonagens(url);
     }
 
+}
 
-    }
+
 
 
 
