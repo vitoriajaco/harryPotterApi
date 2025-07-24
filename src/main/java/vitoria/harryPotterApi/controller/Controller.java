@@ -20,8 +20,14 @@ public class Controller {
     }
 
     @GetMapping("/all")
-    public List<Hogwarts>allStudents() throws IOException, InterruptedException {
+    public List<Hogwarts>todosPersonagens() throws IOException, InterruptedException {
         List<Hogwarts> response = service.pegarTodosPersonagens();
+        return response;
+    }
+
+    @GetMapping("/students")
+    public List<Hogwarts>allStudents() throws IOException, InterruptedException {
+        List<Hogwarts> response = service.todosEstudantes();
         return response;
     }
 }

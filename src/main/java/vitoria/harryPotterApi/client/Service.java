@@ -40,6 +40,7 @@ public class Service {
                 throw new RuntimeException("Resposta nao e json. Content Type: " + contentType);
             }
 
+
             return objectMapper.readValue(httpResponse.body(), new TypeReference<List<Hogwarts>>() {
             });
 
@@ -48,7 +49,40 @@ public class Service {
             throw new RuntimeException("Erro ao consumir api", e);
         }
     }
-}
+
+    public List<Hogwarts> todosEstudantes(){
+        try {
+
+            HttpRequest httpRequest = HttpRequest.newBuilder()
+                    .uri(URI.create("https://hp-api.onrender.com/api/characters/students"))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+            if (httpResponse.statusCode() != 200) {
+                throw new RuntimeException("Erro ao buscar endereço http: " + httpResponse.statusCode());
+            }
+
+            String contentType = httpResponse.headers().firstValue("Content-Type").orElse("");
+            if (!contentType.contains("application/json")) {
+                throw new RuntimeException("Resposta nao e json. Content Type: " + contentType);
+            }
+
+
+            return objectMapper.readValue(httpResponse.body(), new TypeReference<List<Hogwarts>>() {
+            });
+
+
+        } catch (IOException | InterruptedException e){
+            throw new RuntimeException("Erro ao consumir api", e);
+        }
+
+    }
+
+
+    }
+
 
 
 
