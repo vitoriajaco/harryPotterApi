@@ -13,6 +13,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @org.springframework.stereotype.Service
@@ -72,8 +73,16 @@ public class HarryPotterApiClient {
         return buscarLista("https://hp-api.onrender.com/api/spells", new TypeReference<List<Spell>>() {});
 
     }
-}
 
+    public List<Hogwarts> filterByHouse(String house){
+       List<Hogwarts> filter =  todosEstudantes()
+                .stream()
+                .filter(hogwarts -> house.equalsIgnoreCase(hogwarts.getHouse()))
+                .collect(Collectors.toList());
+       return filter;
+
+    }
+}
 
 
 

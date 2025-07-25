@@ -11,6 +11,9 @@ public class Hogwarts {
     String name;
     @JsonProperty(value = "species")
     String species;
+
+    @JsonProperty(value = "house")
+    String house;
     @JsonProperty(value = "gender")
     String gender;
     @JsonProperty(value = "wizard")
@@ -31,5 +34,9 @@ public class Hogwarts {
 
     public Boolean getWizard() {
         return wizard;
+    }
+
+    public String getHouse() {
+        return house;
     }
 }

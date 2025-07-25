@@ -2,6 +2,7 @@ package vitoria.harryPotterApi.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import vitoria.harryPotterApi.client.HarryPotterApiClient;
 import vitoria.harryPotterApi.entity.Hogwarts;
@@ -42,5 +43,13 @@ public class Controller {
     public List<Hogwarts> allStaff(){
         List<Hogwarts> response = harryPotterApiClient.allStaff();
         return response;
+    }
+
+    @GetMapping
+    public List<Hogwarts> getByHouse (@RequestParam String house) {
+        if (house != null){
+            return harryPotterApiClient.filterByHouse(house);
+        }
+        return harryPotterApiClient.pegarTodosPersonagens();
     }
 }
