@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vitoria.harryPotterApi.client.Service;
 import vitoria.harryPotterApi.entity.Hogwarts;
+import vitoria.harryPotterApi.entity.Spell;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,6 +29,12 @@ public class Controller {
     @GetMapping("/students")
     public List<Hogwarts>allStudents() throws IOException, InterruptedException {
         List<Hogwarts> response = service.todosEstudantes();
+        return response;
+    }
+
+    @GetMapping("/spells")
+    public List<Spell>allSpells() throws IOException, InterruptedException {
+        List<Spell> response = service.allSpells();
         return response;
     }
 }
