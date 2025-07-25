@@ -7,6 +7,7 @@ import vitoria.harryPotterApi.client.Service;
 import vitoria.harryPotterApi.entity.Hogwarts;
 import vitoria.harryPotterApi.entity.Spell;
 
+import javax.swing.text.Highlighter;
 import java.io.IOException;
 import java.util.List;
 
@@ -35,6 +36,12 @@ public class Controller {
     @GetMapping("/spells")
     public List<Spell>allSpells() throws IOException, InterruptedException {
         List<Spell> response = service.allSpells();
+        return response;
+    }
+
+    @GetMapping("/staff")
+    public List<Hogwarts> allStaff(){
+        List<Hogwarts> response = service.allStaff();
         return response;
     }
 }

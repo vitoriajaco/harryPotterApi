@@ -56,6 +56,11 @@ public class Service {
         return  buscarPersonagens(url);
     }
 
+    public List<Hogwarts> allStaff(){
+        return buscarPersonagens("https://hp-api.onrender.com/api/characters/staff");
+
+    }
+
     public List<Spell> allSpells(){
 
         try {
