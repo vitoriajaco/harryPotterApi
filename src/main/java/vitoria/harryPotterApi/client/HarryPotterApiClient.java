@@ -16,14 +16,18 @@ import java.util.List;
 
 
 @org.springframework.stereotype.Service
-public class Service {
+public class HarryPotterApiClient {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
-    private final HttpClient httpClient = HttpClient.newBuilder()
-            .connectTimeout(Duration.ofSeconds(10)).build();
+    private final HttpClient httpClient;
 
-    private List<Hogwarts> buscarPersonagens(String url) {
+    public HarryPotterApiClient(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+        this.httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
+    }
+
+    private <T> List<T> buscarLista(String url, TypeReference<List<T>> typeReference) {
         try {
             HttpRequest httpRequest = HttpRequest.newBuilder()
                     .uri(URI.create(url))
@@ -41,55 +45,34 @@ public class Service {
                 throw new RuntimeException("Resposta nao e json. Content Type: " + contentType);
             }
 
-            return objectMapper.readValue(httpResponse.body(), new TypeReference<List<Hogwarts>>() {
-            });
+            return objectMapper.readValue(httpResponse.body(), typeReference);
+
 
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Erro ao consumir api", e);
         }
     }
     public List<Hogwarts> pegarTodosPersonagens() {
-        return buscarPersonagens("https://hp-api.onrender.com/api/characters");
+        return buscarLista("https://hp-api.onrender.com/api/characters", new TypeReference<List<Hogwarts>>() {
+        });
     }
     public List<Hogwarts> todosEstudantes(){
         String url = "https://hp-api.onrender.com/api/characters/students";
-        return  buscarPersonagens(url);
+        return  buscarLista(url, new TypeReference<List<Hogwarts>>() {
+        });
     }
 
     public List<Hogwarts> allStaff(){
-        return buscarPersonagens("https://hp-api.onrender.com/api/characters/staff");
+        return buscarLista("https://hp-api.onrender.com/api/characters/staff", new TypeReference<List<Hogwarts>>() {
+        });
 
     }
 
     public List<Spell> allSpells(){
-
-        try {
-            HttpRequest httpRequest = HttpRequest.newBuilder()
-                    .uri(URI.create("https://hp-api.onrender.com/api/spells"))
-                    .GET()
-                    .build();
-
-            HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-
-            if (httpResponse.statusCode() != 200) {
-                throw new RuntimeException("Erro ao buscar endereço http: " + httpResponse.statusCode());
-            }
-
-            String contentType = httpResponse.headers().firstValue("Content-Type").orElse("");
-            if (!contentType.contains("application/json")) {
-                throw new RuntimeException("Resposta nao e json. Content Type: " + contentType);
-            }
-
-            return objectMapper.readValue(httpResponse.body(), new TypeReference<List<Spell>>() {
-            });
-
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException("Erro ao consumir api", e);
-        }
-    }
-
+        return buscarLista("https://hp-api.onrender.com/api/spells", new TypeReference<List<Spell>>() {});
 
     }
+}
 
 
 
